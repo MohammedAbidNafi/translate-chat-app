@@ -6,13 +6,15 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Animated,
+  Pressable,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { supabase } from "@/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignUp() {
-    const router = useRouter();
-
-    //gpt generated starts
+  const [OTP, setOTP] = useState("");
+  const router = useRouter();
   const buttonScale = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
@@ -28,27 +30,56 @@ export default function SignUp() {
       useNativeDriver: true,
     }).start();
   };
-//got generated animations end
+  //got generated animations end
+
+  const verifyOtp = async () => {
+    const PhoneNo = await AsyncStorage.getItem("phone");
+    if (!PhoneNo || PhoneNo.length !== 10) {
+      alert("Please enter correct phone number.");
+      return;
+    }
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.verifyOtp({
+      phone: "+91" + PhoneNo,
+      token: OTP,
+      type: "sms",
+    });
+
+    if (error) {
+      alert(error.message);
+      console.log(error);
+      return;
+    } else {
+      console.log("OTP verified successfully");
+    }
+    router.push("/saveProfile");
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100 justify-center p-4">
-     
-        <TextInput
-          placeholder="Enter OTP"
-          className="border border-gray-300 rounded-lg p-2 mb-4"
-          keyboardType="phone-pad"
-        />
-        <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
-          <TouchableOpacity
-            className="bg-blue-500 rounded-lg p-2 mb-4"
-            onPressIn={handlePressIn}
-            onPressOut={handlePressOut}
-          >
-            <Text className="text-white text-center font-semibold">
-              verify
+      <TextInput
+        className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
+        placeholder="Enter OTP"
+        keyboardType="phone-pad"
+        value={OTP}
+        onChangeText={setOTP}
+      />
+      <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+        <Pressable
+          className="mt-[12px] w-full rounded-[16px] bg-primary-b-300 py-[16px] dark:bg-primary-a-900"
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          onPress={verifyOtp}
+        >
+          <View className="flex-row items-center justify-center">
+            <Text className="ml-[4px] text-center text-[16px] text-primary-a-500 dark:text-primary-b-50">
+              Verify
             </Text>
-          </TouchableOpacity>
-        </Animated.View>
+          </View>
+        </Pressable>
+      </Animated.View>
     </SafeAreaView>
   );
 }

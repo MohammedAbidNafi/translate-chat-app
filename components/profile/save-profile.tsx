@@ -166,7 +166,6 @@ export default function SaveProfileComp() {
             className="bg-primary-b-600 dark:bg-primary-a-600 absolute w-full mt-24 rounded-xl z-10"
             style={{
               maxHeight: 200,
-
               overflow: "hidden",
             }}
           />
