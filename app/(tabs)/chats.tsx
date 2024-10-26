@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
-// import tw from "twrnc"; // Make sure to install twrnc if not already
+import { View, Text, ScrollView, Image, TouchableOpacity, Pressable } from "react-native";
+import { router } from "expo-router";
 
 const contacts = [
   {
@@ -42,13 +42,18 @@ const contacts = [
 
 export default function ChatsScreen() {
   return (
-    <View className="flex-1 bg-gray-900 p-4">
+    <View className="flex-1 bg-accent-100 p-4">
       <ScrollView>
         {contacts.map((contact) => (
-          <TouchableOpacity
+          <Pressable
             key={contact.id}
             className="flex-row items-center py-3 border-b border-gray-700"
-            // onPress={{}}
+            onPress={() => {
+              router.push({
+                pathname: "../chats/[id]",
+                params: { id: contact.id },
+              });
+            }}
           >
             <Image
               source={{ uri: contact.image }}
@@ -61,9 +66,11 @@ export default function ChatsScreen() {
               <Text className="text-gray-400 text-sm">{contact.message}</Text>
             </View>
             <Text className="text-gray-500 text-xs">{contact.time}</Text>
-          </TouchableOpacity>
+          </Pressable>
         ))}
       </ScrollView>
     </View>
   );
 }
+
+
