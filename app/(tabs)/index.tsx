@@ -17,7 +17,7 @@ export default function HomeScreen() {
       <View className="flex-row mt-4">
         <Pressable
           onPress={() => {
-            router.push("/auth/sign-up");
+            router.push("./auth/sign-up");
           }}
         >
           <Text className="text-blue-600">SignUp</Text>
