@@ -3,13 +3,13 @@ import {
   Text,
   TextInput,
   FlatList,
-  TouchableOpacity,
   Pressable,
+  Image,
 } from "react-native";
-import { Card, CardTitle } from "../ui/Card";
-import React, { SetStateAction, useState } from "react";
-import { Searchbar } from "react-native-paper";
+import React, { useState } from "react";
 import { router } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
+import { supabase } from "@/supabase";
 
 export default function SaveProfileComp() {
   const languages = [
@@ -94,6 +94,8 @@ export default function SaveProfileComp() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredLanguages, setFilteredLanguages] = useState(languages);
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null); // Image URI state
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const onChangeSearch = (query: string) => {
     setSearchQuery(query);
@@ -117,11 +119,110 @@ export default function SaveProfileComp() {
     setSearchQuery("");
   };
 
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      setImageUri(uri);
+      uploadImageToSupabase(uri); // Trigger upload with URI
+    }
+  };
+
+  // Upload Image to Supabase using a File object
+  const uploadImageToSupabase = async (uri: string) => {
+    try {
+      const fileName = `profile_${Date.now()}.jpg`;
+
+      // Fetch the file from the URI and create a File object
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const file = new File([blob], fileName, { type: "image/jpeg" });
+
+      // Upload the file directly to Supabase storage
+      const { data, error } = await supabase.storage
+        .from("profile") // Ensure the bucket name is correct
+        .upload(fileName, file, { upsert: false });
+
+      if (error) {
+        console.log("Upload Error:", error);
+        return;
+      }
+
+      // Retrieve the public URL if upload is successful
+      const {
+        data: { publicUrl },
+      } = supabase.storage
+        .from("profile") // Correct bucket name
+        .getPublicUrl(fileName);
+
+      setImageUrl(publicUrl);
+      console.log("File uploaded successfully:", publicUrl);
+    } catch (err) {
+      console.error("Upload failed:", err);
+    }
+  };
+  const saveData = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    console.log(user);
+    if (!name || !selectedLanguage || !imageUrl) {
+      alert("Please fill all the fields");
+      console.log(name, selectedLanguage, imageUrl);
+      return;
+    }
+
+    const { data, error } = await supabase.from("users").insert({
+      id: user?.id,
+      name: name,
+      imageUrl: imageUrl,
+      language: selectedLanguage,
+    });
+
+    if (error) {
+      alert("Error saving data: " + error);
+      console.error("Error saving data:", error);
+    }
+
+    router.replace("/");
+  };
+
   return (
     <View className=" bg-primary-b-600 dark:bg-primary-a-600 flex items-center justify-center m-5 p-5 rounded">
       <Text className="text-[28px] text-primary-a-500 dark:text-primary-b-50">
         Enter your details
       </Text>
+      <Pressable onPress={pickImage} className="my-10">
+        {imageUri ? (
+          <Image
+            source={{ uri: imageUri }}
+            style={{
+              width: 96,
+              height: 96,
+              borderRadius: 48,
+              resizeMode: "cover",
+            }}
+          />
+        ) : (
+          <View>
+            <View className="w-24 h-24 rounded-full bg-primary-a-200 flex items-center justify-center"></View>
+            <Text className="text-blue-500 mt-2">Upload Image</Text>
+          </View>
+        )}
+      </Pressable>
       <View className="w-full mt-[12px]">
         <Text className="text-primary-a-500 dark:text-primary-b-50 ml-2">
           Enter Username
@@ -172,7 +273,7 @@ export default function SaveProfileComp() {
         )}
         <Pressable
           className="mt-[12px] w-full rounded-[16px] bg-primary-b-300 py-[16px] dark:bg-primary-a-900"
-          onPress={() => router.replace("/")}
+          onPress={saveData}
         >
           <View className="flex-row items-center justify-center">
             <Text className="ml-[4px] text-center text-[16px] text-primary-a-500 dark:text-primary-b-50">
