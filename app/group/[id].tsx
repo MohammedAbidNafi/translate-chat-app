@@ -70,7 +70,6 @@ export default function GroupChat() {
         // Set the source and destination languages based on the sender and receiver IDs
         data.forEach((user) => {
           if (user.id === senderId) setSourceLanguage(user.language);
-          if (user.id === id) setDestinationLanguage(user.language);
         });
         console.log("Languages fetched successfully:", data);
       }
@@ -149,7 +148,7 @@ export default function GroupChat() {
             message={msg.message}
             created_at={msg.created_at}
             source={sourceLanguage || ""}
-            destination={destinationLanguage || ""}
+            destination={msg.source}
           />
         ))}
       </ScrollView>
