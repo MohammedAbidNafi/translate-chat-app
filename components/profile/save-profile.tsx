@@ -191,8 +191,13 @@ export default function SaveProfileComp() {
     });
 
     if (error) {
-      alert("Error saving data: " + error);
-      console.error("Error saving data:", error);
+      if (error.code === "23505") {
+        console.log("Duplicate user found, routing to home screen...");
+        router.push("/(tabs)/"); // Route to desired screen
+      } else {
+        alert("Error saving data: " + error);
+        console.error("Error saving data:", error);
+      }
     }
 
     router.replace("/(tabs)/");
