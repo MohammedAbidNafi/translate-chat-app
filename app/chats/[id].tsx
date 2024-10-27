@@ -10,7 +10,9 @@ import {
 } from "react-native";
 
 import { useState } from "react";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 export default function HomeScreen() {
+  const { id } = useLocalSearchParams();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
     { text: "Hello!", isUser: false, timestamp: "12:00 PM", isRead: true },
@@ -74,20 +76,24 @@ export default function HomeScreen() {
           </View>
         ))}
       </ScrollView>
-
-      {/* Message Input */}
-      <View className="flex-row items-center border-t border-gray-700 pt-2">
-        <TextInput
-          className="flex-1 bg-gray-800 text-white p-3 rounded-lg mr-2"
-          placeholder="Type your message..."
-          placeholderTextColor="#888"
-          value={message}
-          onChangeText={setMessage}
-        />
-        <Pressable className="p-3 bg-blue-600 rounded-lg" onPress={sendMessage}>
-          <Text className="text-white">Send</Text>
-        </Pressable>
-      </View>
+      <KeyboardAwareScrollView>
+        {/* Message Input */}
+        <View className="flex-row items-center border-t border-gray-700 pt-2">
+          <TextInput
+            className="flex-1 bg-gray-800 text-primary-a-900 dark:text-primary-b-50 p-3 rounded-lg mr-2"
+            placeholder="Type your message..."
+            placeholderTextColor="#888"
+            value={message}
+            onChangeText={setMessage}
+          />
+          <Pressable
+            className="p-3 bg-blue-600 rounded-lg"
+            onPress={sendMessage}
+          >
+            <Text className="text-white">Send</Text>
+          </Pressable>
+        </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 }

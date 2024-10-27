@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { router } from "expo-router";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "@/supabase";
 
@@ -201,87 +202,89 @@ export default function SaveProfileComp() {
   };
 
   return (
-    <View className=" bg-primary-b-600 dark:bg-primary-a-600 flex items-center justify-center m-5 p-5 rounded">
-      <Text className="text-[28px] text-primary-a-500 dark:text-primary-b-50">
-        Enter your details
-      </Text>
-      <Pressable onPress={pickImage} className="my-10">
-        {imageUri ? (
-          <Image
-            source={{ uri: imageUri }}
-            style={{
-              width: 96,
-              height: 96,
-              borderRadius: 48,
-              resizeMode: "cover",
-            }}
-          />
-        ) : (
-          <View>
-            <View className="w-24 h-24 rounded-full bg-primary-a-200 flex items-center justify-center"></View>
-            <Text className="text-blue-500 mt-2">Upload Image</Text>
-          </View>
-        )}
-      </Pressable>
-      <View className="w-full mt-[12px]">
-        <Text className="text-primary-a-500 dark:text-primary-b-50 ml-2">
-          Enter Username
+    <KeyboardAwareScrollView>
+      <View className=" bg-primary-b-600 dark:bg-primary-a-600 flex items-center justify-center m-5 p-5 rounded">
+        <Text className="text-[28px] text-primary-a-500 dark:text-primary-b-50">
+          Enter your details
         </Text>
-        <TextInput
-          className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
-          onChangeText={setName}
-          placeholder="Enter your username"
-          value={name}
-        />
-      </View>
-
-      <View className="w-full mt-[12px]">
-        <Text className="text-primary-a-500 dark:text-primary-b-50 ml-2">
-          Select Language
-        </Text>
-        <TextInput
-          className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
-          placeholder="Enter your primary language"
-          onChangeText={onChangeSearch}
-          value={
-            searchQuery ||
-            (selectedLanguage &&
-              languages.find((lang) => lang.value === selectedLanguage)
-                ?.label) ||
-            ""
-          }
-        />
-        {searchQuery.length > 0 && (
-          <FlatList
-            data={filteredLanguages}
-            keyExtractor={(item) => item.value}
-            renderItem={({ item }) => (
-              <Pressable onPress={() => onSelectLanguage(item.value)}>
-                <View className="py-5 px-2 bg-primary-b-100 dark:bg-primary-a-500 border-b  dark:border-primary-a-400">
-                  <Text className="text-primary-a-900 dark:text-primary-b-50">
-                    {item.label}
-                  </Text>
-                </View>
-              </Pressable>
-            )}
-            className="bg-primary-b-600 dark:bg-primary-a-600 absolute w-full mt-24 rounded-xl z-10"
-            style={{
-              maxHeight: 200,
-              overflow: "hidden",
-            }}
-          />
-        )}
-        <Pressable
-          className="mt-[12px] w-full rounded-[16px] bg-primary-b-300 py-[16px] dark:bg-primary-a-900"
-          onPress={saveData}
-        >
-          <View className="flex-row items-center justify-center">
-            <Text className="ml-[4px] text-center text-[16px] text-primary-a-500 dark:text-primary-b-50">
-              Save Data
-            </Text>
-          </View>
+        <Pressable onPress={pickImage} className="my-10">
+          {imageUri ? (
+            <Image
+              source={{ uri: imageUri }}
+              style={{
+                width: 96,
+                height: 96,
+                borderRadius: 48,
+                resizeMode: "cover",
+              }}
+            />
+          ) : (
+            <View>
+              <View className="w-24 h-24 rounded-full bg-primary-a-200 flex items-center justify-center"></View>
+              <Text className="text-blue-500 mt-2">Upload Image</Text>
+            </View>
+          )}
         </Pressable>
+        <View className="w-full mt-[12px]">
+          <Text className="text-primary-a-500 dark:text-primary-b-50 ml-2">
+            Enter Username
+          </Text>
+          <TextInput
+            className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
+            onChangeText={setName}
+            placeholder="Enter your username"
+            value={name}
+          />
+        </View>
+
+        <View className="w-full mt-[12px]">
+          <Text className="text-primary-a-500 dark:text-primary-b-50 ml-2">
+            Select Language
+          </Text>
+          <TextInput
+            className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
+            placeholder="Enter your primary language"
+            onChangeText={onChangeSearch}
+            value={
+              searchQuery ||
+              (selectedLanguage &&
+                languages.find((lang) => lang.value === selectedLanguage)
+                  ?.label) ||
+              ""
+            }
+          />
+          {searchQuery.length > 0 && (
+            <FlatList
+              data={filteredLanguages}
+              keyExtractor={(item) => item.value}
+              renderItem={({ item }) => (
+                <Pressable onPress={() => onSelectLanguage(item.value)}>
+                  <View className="py-5 px-2 bg-primary-b-100 dark:bg-primary-a-500 border-b  dark:border-primary-a-400">
+                    <Text className="text-primary-a-900 dark:text-primary-b-50">
+                      {item.label}
+                    </Text>
+                  </View>
+                </Pressable>
+              )}
+              className="bg-primary-b-600 dark:bg-primary-a-600 absolute w-full mt-24 rounded-xl z-10"
+              style={{
+                maxHeight: 200,
+                overflow: "hidden",
+              }}
+            />
+          )}
+          <Pressable
+            className="mt-[12px] w-full rounded-[16px] bg-primary-b-300 py-[16px] dark:bg-primary-a-900"
+            onPress={saveData}
+          >
+            <View className="flex-row items-center justify-center">
+              <Text className="ml-[4px] text-center text-[16px] text-primary-a-500 dark:text-primary-b-50">
+                Save Data
+              </Text>
+            </View>
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 }
