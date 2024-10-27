@@ -20,13 +20,13 @@ export default function UserComp({
 }) {
   return (
     <Pressable
-      className="flex flex-row justify-start items-center border-t-2 border-b-2 my-5"
+      className="flex-row items-center py-3 border-b border-gray-700"
       onPress={() => {
         router.push({ pathname: "/chats/[id]", params: { id } });
       }}
     >
-      <Image className="h-24 w-24 rounded-full  " source={imageUrl}></Image>
-      <Text className="text-3xl text-primary-a-900 dark:text-primary-a-50">
+      <Image className="w-12 h-12 rounded-full mr-4" source={imageUrl}></Image>
+      <Text className="font-semibold text-base text-primary-a-900 dark:text-primary-a-50">
         {name}
       </Text>
     </Pressable>
