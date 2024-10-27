@@ -64,7 +64,7 @@ const GroupMessage = ({
         isUser ? "bg-blue-500 ml-auto" : "bg-warning-100 mr-auto"
       }`}
     >
-      <Text className="text-white w-96">{translatedMessage}</Text>
+      <Text className="text-primary-a-50 w-96">{translatedMessage}</Text>
       <View className="flex-row justify-between items-center mt-1">
         <Text className="text-accent-300 text-xs">{created_at}</Text>
       </View>

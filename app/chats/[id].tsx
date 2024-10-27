@@ -211,7 +211,7 @@ export default function HomeScreen() {
               msg.isUser ? "bg-blue-500 ml-auto" : "bg-warning-100 mr-auto"
             }`}
           >
-            <Text className="text-white w-96">
+            <Text className="text-primary-a-50 w-96">
               {msg.isUser ? msg.message : msg.trans_message}
             </Text>
             <View className="flex-row justify-between items-center mt-1">
