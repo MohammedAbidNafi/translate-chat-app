@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function HomeScreen() {
   const { id } = useLocalSearchParams();
   const [message, setMessage] = useState("");
+  const [Acc,setAcc] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
@@ -41,33 +42,58 @@ export default function HomeScreen() {
     setLoading(true);
     await fetchUser();
     await fetchMessages();
+    await fetchUserById(id);
     await fetchLanguages();
     setLoading(false);
   };
 
-  const fetchUser = async () => {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
+  const fetchUserById = async (userId:any) => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("name")
+      .eq("id", userId)
+      .single();
+
     if (error) {
-      console.error("Error fetching user:", error.message);
+      console.error("Error fetching user's name:", error.message);
     } else {
-      setUserId(user?.id || null);
-
-      const { data, error: fetchError } = await supabase
-        .from("users")
-        .select("name")
-        .eq("id", user?.id)
-        .single();
-
-      if (fetchError) {
-        console.error("Error fetching user's name:", fetchError.message);
-      } else {
-        setUserName(data?.name || "User");
-      }
+      const name = data?.name || "User";
+      setAcc(name); // Set the fetched name to userName state
+      console.log("Fetched user's name:", name);
     }
   };
+  const fetchUser = async () => {
+  // Fetch the current authenticated user
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) {
+    console.error("Error fetching user:", error.message);
+    return; // Exit if there's an error
+  }
+
+  // Set the user ID
+  setUserId(user?.id || null);
+
+  // Fetch the user's name from the "users" table
+  const { data, error: fetchError } = await supabase
+    .from("users")
+    .select("name")
+    .eq("id", user?.id)
+    .single();
+
+  if (fetchError) {
+    console.error("Error fetching user's name:", fetchError.message);
+  } else {
+    const fetchedName = data?.name || "User"; // Default to "User" if name is not found
+    setUserName(fetchedName);
+
+    console.log("User name fetched successfully:", fetchedName); // Log the fetched name
+  }
+};
+
 
   // Fetch messages from Supabase
   const fetchMessages = async () => {
@@ -95,6 +121,7 @@ export default function HomeScreen() {
   const fetchLanguages = async () => {
     const senderId = await AsyncStorage.getItem("id");
     console.log("senderId", senderId);
+    
     try {
       const { data, error } = await supabase
         .from("users")
@@ -154,20 +181,26 @@ export default function HomeScreen() {
       </View>
     );
   }
+// console.log("User ID:", user?.id);
+// console.log("Fetched Name:", data?.name);
 
   return (
-    <View className="flex-1 bg-gray-900 p-4">
+    <View className="flex-1 bg-gray-900  p-4">
       {/* Set up the Stack.Screen header with userName */}
       <Stack.Screen
         options={{
           headerTitle: () => (
             <View className="flex-row items-center">
-              <Text className="text-lg text-white">{userName}</Text>
+              {Acc ? (
+                <Text className="text-lg text-white">{Acc}</Text>
+              ) : (
+                <ActivityIndicator size="small" color="#1E90FF" /> 
+              )}
             </View>
           ),
         }}
       />
-      <ScrollView className="flex-1 mb-4">
+      <ScrollView className="flex-1 h-full mb-4">
         {messages.map((msg, index) => (
           <View
             key={index}
