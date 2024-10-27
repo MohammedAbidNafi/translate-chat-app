@@ -177,7 +177,7 @@ export default function SaveProfileComp() {
     } = await supabase.auth.getUser();
 
     console.log(user);
-    if (!name || !selectedLanguage || !imageUrl) {
+    if (!name || !selectedLanguage) {
       alert("Please fill all the fields");
       console.log(name, selectedLanguage, imageUrl);
       return;
