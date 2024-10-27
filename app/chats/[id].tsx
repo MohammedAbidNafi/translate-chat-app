@@ -159,7 +159,7 @@ export default function HomeScreen() {
     };
 
     try {
-      const response = await fetch("http://192.168.1.88:8080/chat", {
+      const response = await fetch("http://192.168.1.5:8080/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -225,7 +225,6 @@ export default function HomeScreen() {
           </View>
         ))}
       </ScrollView>
-      <KeyboardAwareScrollView enableOnAndroid={false}>
         <View className="flex-row items-center border-t border-gray-700 pt-2">
           <TextInput
             className="flex-1 bg-gray-800 text-primary-a-900 dark:text-primary-b-50 p-3 rounded-lg mr-2"
@@ -241,7 +240,6 @@ export default function HomeScreen() {
             <Text className="text-primary-a-50">Send</Text>
           </Pressable>
         </View>
-      </KeyboardAwareScrollView>
     </View>
   );
 }
