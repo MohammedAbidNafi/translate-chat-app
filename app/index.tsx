@@ -42,7 +42,7 @@ export default function SignUp() {
         console.log(error);
         return;
       }
-      router.push("./otpBox");
+      router.push("/auth/otpBox");
     } else {
       alert("Please enter correct phone number.");
     }
