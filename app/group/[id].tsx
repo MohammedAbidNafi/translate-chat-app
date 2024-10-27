@@ -144,6 +144,7 @@ export default function GroupChat() {
       <ScrollView className="flex-1 mb-4">
         {messages.map((msg, index) => (
           <GroupMessage
+            key={index}
             isUser={msg.isUser}
             message={msg.message}
             created_at={msg.created_at}
