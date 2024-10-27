@@ -153,7 +153,7 @@ export default function GroupChat() {
           />
         ))}
       </ScrollView>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView enableOnAndroid={false}>
         {/* Message Input */}
         <View className="flex-row items-center border-t border-gray-700 pt-2">
           <TextInput
