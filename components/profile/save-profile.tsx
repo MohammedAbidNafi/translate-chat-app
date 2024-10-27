@@ -186,7 +186,7 @@ export default function SaveProfileComp() {
 
     if (user?.id) {
       await AsyncStorage.setItem("id", user.id);
-      console.log("User ID saved to AsyncStorage:", user.id);
+      await AsyncStorage.setItem("name", name);
     }
     const { data, error } = await supabase.from("users").insert({
       id: user?.id,

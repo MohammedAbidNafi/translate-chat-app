@@ -12,7 +12,7 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="chat-screen"
+          name="add-users"
           options={{
             title: "Chats",
             tabBarLabel: "Chats",
@@ -23,13 +23,6 @@ export default function TabLayout() {
           options={{
             title: "Groups",
             tabBarLabel: "Groups",
-          }}
-        />
-        <Tabs.Screen
-          name="add-users"
-          options={{
-            title: "Add Users",
-            tabBarLabel: "Add Users",
           }}
         />
       </Tabs>
