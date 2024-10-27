@@ -51,16 +51,16 @@ export default function SignUp() {
   return (
     <SafeAreaView className="flex flex-col bg-blue-200 items-center justify-center w-full h-full">
       <Stack.Screen options={{ headerShown: false }} />
-      <Text className="text-blue-500 text-xl font-bold mb-6">Sign Up</Text>
-
-      <TextInput
-        placeholder="Phone Number"
-        className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
-        keyboardType="phone-pad"
-        value={PhoneNo}
-        onChangeText={setPhoneNo}
-      />
-
+      <Text className="text-primary-a-50 text-4xl font-bold mb-6">Sign Up</Text>
+      <View className="w-full px-5">
+        <TextInput
+          placeholder="Phone Number"
+          className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
+          keyboardType="phone-pad"
+          value={PhoneNo}
+          onChangeText={setPhoneNo}
+        />
+      </View>
       <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
         <Pressable
           className="mt-[12px] w-full rounded-[16px] bg-primary-b-300 py-[16px] px-8 dark:bg-primary-a-900"

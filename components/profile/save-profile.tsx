@@ -287,11 +287,11 @@ export default function SaveProfileComp() {
             />
           )}
           <Pressable
-            className="mt-[12px] w-full rounded-[16px] bg-primary-b-300 py-[16px] dark:bg-primary-a-900"
+            className="mt-[12px] w-full rounded-[16px]  py-[16px] bg-primary-a-900"
             onPress={saveData}
           >
             <View className="flex-row items-center justify-center">
-              <Text className="ml-[4px] text-center text-[16px] text-primary-a-500 dark:text-primary-b-50">
+              <Text className="ml-[4px] text-center text-[16px] text-primary-b-50">
                 Save Data
               </Text>
             </View>
