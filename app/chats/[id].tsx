@@ -46,6 +46,7 @@ export default function HomeScreen() {
 
   const loadData = async () => {
     setLoading(true);
+
     await fetchUser();
     await fetchMessages();
     await fetchLanguages();
@@ -67,17 +68,20 @@ export default function HomeScreen() {
 
   // Fetch messages from Supabase
   const fetchMessages = async () => {
+    const senderId = await AsyncStorage.getItem("id");
     const { data, error } = await supabase
       .from("chats")
       .select("*")
-      .or(`sender_id.eq.${userId},sender_id.eq.${id}`)
+      .or(
+        `and(sender_id.eq.${senderId},receiver_id.eq.${id}),and(sender_id.eq.${id},receiver_id.eq.${senderId})`
+      )
       .order("created_at", { ascending: true });
 
     if (!error) {
       // Set messages and mark isUser based on the authenticated user's ID
       const updatedMessages = data.map((msg) => ({
         ...msg,
-        isUser: msg.sender_id === userId, // Determine if the message is from the user
+        isUser: msg.sender_id === senderId, // Determine if the message is from the user
       }));
       setMessages(updatedMessages);
       console.log("Messages fetched successfully:", updatedMessages);
