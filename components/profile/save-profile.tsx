@@ -195,7 +195,7 @@ export default function SaveProfileComp() {
       console.error("Error saving data:", error);
     }
 
-    router.replace("/");
+    router.replace("/(tabs)/");
   };
 
   return (
