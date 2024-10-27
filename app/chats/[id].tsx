@@ -71,14 +71,14 @@ export default function HomeScreen() {
     const messagePayload = {
       message: message,
       source: "en", // or dynamically set this based on your app’s context
-      destination: "fr",
+      destination: "ta",
       sender_id: userId, // Use the authenticated user ID
       receiver_id: id, // Replace with appropriate receiver ID
     };
 
     try {
       // Send message to the server
-      const response = await fetch("http://192.168.1.88:8080/chat", {
+      const response = await fetch("http://136.185.70.191:8080/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export default function HomeScreen() {
         // Fetch the updated messages from Supabase
         fetchMessages();
       } else {
-        console.error("Error sending message:", response.statusText);
+        console.error("Error sending message:", response);
       }
     } catch (error) {
       console.error("Failed to send message:", error);
