@@ -17,16 +17,17 @@ const GroupMessage = ({
   const [translatedMessage, setTranslatedMessage] = useState("");
 
   const translateMessage = async () => {
-    console.log("Translating message:", message);
+    console.log("source", source);
+    console.log("destination", destination);
     // Define the translation payload according to server requirements
 
     if (isUser) {
       setTranslatedMessage(message);
     } else {
       const translationPayload = {
-        text: message,
-        source: source,
-        target: destination,
+        message: message,
+        source: destination,
+        destination: source,
       };
 
       try {
@@ -41,8 +42,9 @@ const GroupMessage = ({
 
         if (response.ok) {
           // Reset message input on successful send
-          const data = await response.json();
-          setTranslatedMessage(data.translatedText);
+
+          const translatedText = await response.text();
+          setTranslatedMessage(translatedText);
         } else {
           console.error("Error sending message:", response.statusText);
         }
