@@ -29,8 +29,13 @@ export default function GroupScreen() {
       />
 
       <ScrollView className="w-full ">
-        {data?.map((item) => (
-          <GroupComp id={item.id} name={item.name} imageUrl={item.imageUrl} />
+        {data?.map((item, index) => (
+          <GroupComp
+            key={index}
+            id={item.id}
+            name={item.name}
+            imageUrl={item.imageUrl}
+          />
         ))}
       </ScrollView>
     </SafeAreaView>

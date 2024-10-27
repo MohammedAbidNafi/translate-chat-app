@@ -18,7 +18,6 @@ export default function UserComp({
   name: string;
   imageUrl: any;
 }) {
-  
   return (
     <Pressable
       className="flex-row items-center py-3 border-b border-gray-700"
@@ -26,7 +25,10 @@ export default function UserComp({
         router.push({ pathname: "/chats/[id]", params: { id } });
       }}
     >
-      <Image className="w-12 h-12 rounded-full mr-4" source={imageUrl}></Image>
+      <Image
+        className="w-12 h-12 object-cover rounded-full mr-4"
+        source={imageUrl}
+      ></Image>
       <Text className="font-semibold text-base text-primary-a-900 dark:text-primary-a-50">
         {name}
       </Text>

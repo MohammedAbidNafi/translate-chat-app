@@ -8,7 +8,7 @@ import {
   Animated,
   Pressable,
 } from "react-native";
-import { useRouter,Stack } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import { supabase } from "@/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -58,29 +58,31 @@ export default function SignUp() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100 justify-center p-4">
-      <Stack.Screen options={{ title: "" }} />
-      <TextInput
-        className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
-        placeholder="Enter OTP"
-        keyboardType="phone-pad"
-        value={OTP}
-        onChangeText={setOTP}
-      />
-      <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
-        <Pressable
-          className="mt-[12px] w-full rounded-[16px] bg-primary-b-300 py-[16px] dark:bg-primary-a-900"
-          onPressIn={handlePressIn}
-          onPressOut={handlePressOut}
-          onPress={verifyOtp}
-        >
-          <View className="flex-row items-center justify-center">
-            <Text className="ml-[4px] text-center text-[16px] text-primary-a-500 dark:text-primary-b-50">
-              Verify
-            </Text>
-          </View>
-        </Pressable>
-      </Animated.View>
+    <SafeAreaView className="flex-1 bg-blue-200 justify-center p-4">
+      <Stack.Screen options={{ title: "Verify OTP" }} />
+      <View className="w-full px-10">
+        <TextInput
+          className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
+          placeholder="Enter OTP"
+          keyboardType="phone-pad"
+          value={OTP}
+          onChangeText={setOTP}
+        />
+        <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+          <Pressable
+            className="mt-[12px] w-full rounded-[16px]  py-[16px] bg-primary-a-900"
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            onPress={verifyOtp}
+          >
+            <View className="flex-row items-center justify-center">
+              <Text className="ml-[4px] text-center text-[16px] text-primary-b-50">
+                Verify
+              </Text>
+            </View>
+          </Pressable>
+        </Animated.View>
+      </View>
     </SafeAreaView>
   );
 }

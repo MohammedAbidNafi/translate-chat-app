@@ -114,56 +114,58 @@ export default function GroupChats() {
   };
 
   return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="flex-1 bg-neutral-900 p-4">
-          <ScrollView className="flex-1 mb-4">
-            {messages.map((msg, index) => (
-              <View
-                key={index}
-                className={`p-3 mb-2 rounded-lg max-w-[75%] ${
-                  msg.sender === "You"
-                    ? "bg-blue-600 ml-auto" // Changed to a lighter blue for visibility in dark mode
-                    : "bg-neutral-800 mr-auto"
-                }`}
-              >
-                {msg.sender !== "You" && (
-                  <Text className="text-accent-50 font-semibold">{msg.sender}</Text>
-                )}
-                <Text className="text-white">{msg.text}</Text>
-                {msg.sender === "You" ? (
-                  <View className="flex-row justify-end mt-1">
-                    <Text className="bg-neutral-400 text-xs">
-                      {msg.isRead ? "Read" : "Unread"} • {msg.timestamp}
-                    </Text>
-                  </View>
-                ) : (
-                  <View className="flex-row justify-between items-center mt-1">
-                    <Text className="bg-neutral-400 text-xs">
-                      {msg.timestamp}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            ))}
-          </ScrollView>
-
-          {/* Message Input */}
-          <View className="flex-row items-center border-t border-gray-700 pt-2">
-            <TextInput
-              className="flex-1 bg-neutral-900 text-white p-3 rounded-lg mr-2"
-              placeholder="Type your message..."
-              placeholderTextColor="#888"
-              value={message}
-              onChangeText={setMessage}
-            />
-            <Pressable
-              className="p-3 bg-blue-600 rounded-lg" // Ensure this blue is visible in dark mode
-              onPress={sendMessage}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View className="flex-1 bg-neutral-900 p-4">
+        <ScrollView className="flex-1 mb-4">
+          {messages.map((msg, index) => (
+            <View
+              key={index}
+              className={`p-3 mb-2 rounded-lg max-w-[75%] ${
+                msg.sender === "You"
+                  ? "bg-blue-600 ml-auto" // Changed to a lighter blue for visibility in dark mode
+                  : "bg-neutral-800 mr-auto"
+              }`}
             >
-              <FontAwesome name="send" size={24} color="white" />
-            </Pressable>
-          </View>
+              {msg.sender !== "You" && (
+                <Text className="text-accent-50 font-semibold">
+                  {msg.sender}
+                </Text>
+              )}
+              <Text className="text-white">{msg.text}</Text>
+              {msg.sender === "You" ? (
+                <View className="flex-row justify-end mt-1">
+                  <Text className="bg-neutral-400 text-xs">
+                    {msg.isRead ? "Read" : "Unread"} • {msg.timestamp}
+                  </Text>
+                </View>
+              ) : (
+                <View className="flex-row justify-between items-center mt-1">
+                  <Text className="bg-neutral-400 text-xs">
+                    {msg.timestamp}
+                  </Text>
+                </View>
+              )}
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* Message Input */}
+        <View className="flex-row items-center border-t border-gray-700 pt-2">
+          <TextInput
+            className="flex-1 bg-neutral-900 text-white p-3 rounded-lg mr-2"
+            placeholder="Type your message..."
+            placeholderTextColor="#888"
+            value={message}
+            onChangeText={setMessage}
+          />
+          <Pressable
+            className="p-3 bg-blue-600 rounded-lg" // Ensure this blue is visible in dark mode
+            onPress={sendMessage}
+          >
+            <FontAwesome name="send" size={24} color="white" />
+          </Pressable>
         </View>
-      </TouchableWithoutFeedback>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
