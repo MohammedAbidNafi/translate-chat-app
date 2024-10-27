@@ -29,7 +29,7 @@ export default function AddUsersScreen() {
 
       <ScrollView className="w-full ">
         {data?.map((item) => (
-          <UserComp id={item.id} name={item.name} imageUrl={item.imageUrl} />
+          <UserComp key={item.id} id={item.id} name={item.name} imageUrl={item.imageUrl} />
         ))}
       </ScrollView>
     </SafeAreaView>

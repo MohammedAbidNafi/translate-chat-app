@@ -31,7 +31,7 @@ const GroupMessage = ({
 
       try {
         // Send message to the server
-        const response = await fetch("http://192.168.1.88:8080/translate", {
+        const response = await fetch("http://192.168.1.5:8080/translate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

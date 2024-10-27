@@ -8,7 +8,7 @@ import {
   Animated,
   Pressable,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter,Stack } from "expo-router";
 import { supabase } from "@/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -59,6 +59,7 @@ export default function SignUp() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100 justify-center p-4">
+      <Stack.Screen options={{ title: "" }} />
       <TextInput
         className="mt-[5px] w-full rounded-[16px] bg-primary-b-300 p-[16px] text-primary-a-900 dark:border dark:border-primary-a-400 dark:bg-transparent dark:text-primary-b-50"
         placeholder="Enter OTP"
