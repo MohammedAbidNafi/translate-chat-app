@@ -12,6 +12,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "@/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from "expo-file-system";
+import { decode as atob } from "base-64";
 
 export default function SaveProfileComp() {
   const languages = [
@@ -138,49 +140,53 @@ export default function SaveProfileComp() {
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const uri = result.assets[0].uri;
       setImageUri(uri);
-      uploadImageToSupabase(uri);
+      await uploadImage(uri); // Call uploadImage and store the URL
     }
   };
 
-  // Upload Image to Supabase using a File object
-  const uploadImageToSupabase = async (uri: string) => {
-    try {
-      const fileName = `profile_${Date.now()}.jpg`;
-
-      // Fetch the file from the URI and create a File object
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const file = new File([blob], fileName, { type: "image/jpeg" });
-
-      // Upload the file directly to Supabase storage
-      const { data, error } = await supabase.storage
-        .from("profile") // Ensure the bucket name is correct
-        .upload(fileName, file, { upsert: false });
-
-      if (error) {
-        console.log("Upload Error:", error);
-        return;
-      }
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("profile").getPublicUrl(fileName);
-
-      setImageUrl(publicUrl);
-      console.log("File uploaded successfully:", publicUrl);
-    } catch (err) {
-      console.error("Upload failed:", err);
+  async function uploadImage(uri: string | null) {
+    if (!uri) {
+      console.log("No URI provided for the image.");
+      return null;
     }
-  };
+    const fileName = uri?.split("/").pop() || "default_filename";
+    const fileType = fileName.split(".").pop();
+
+    // Read the file into base64 format
+    const fileData = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    // Decode the base64 string to binary for Supabase
+    const fileBlob = atob(fileData);
+
+    const { data, error } = await supabase.storage
+      .from("profile") // Make sure the bucket name matches your actual one
+      .upload(fileName, fileBlob, {
+        contentType: `image/${fileType}`,
+      });
+
+    if (error) {
+      console.log("Upload error:", error);
+      return null;
+    }
+
+    // Retrieve the public URL after upload
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("profile").getPublicUrl(data.path);
+    setImageUrl(publicUrl); // Save the URL for future use in `saveData`
+    setImageUri(uri); // Update the image URI for display
+    return publicUrl;
+  }
+
   const saveData = async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    console.log(user);
     if (!name || !selectedLanguage) {
       alert("Please fill all the fields");
-      console.log(name, selectedLanguage, imageUrl);
       return;
     }
 
@@ -188,24 +194,24 @@ export default function SaveProfileComp() {
       await AsyncStorage.setItem("id", user.id);
       await AsyncStorage.setItem("name", name);
     }
+
     const { data, error } = await supabase.from("users").insert({
       id: user?.id,
       name: name,
-      imageUrl: imageUrl,
+      imageUrl: imageUrl, // Now populated with the public URL
       language: selectedLanguage,
     });
 
     if (error) {
       if (error.code === "23505") {
         console.log("Duplicate user found, routing to home screen...");
-        router.push("/(tabs)/"); // Route to desired screen
+        router.push("/(tabs)/");
       } else {
-        alert("Error saving data: " + error);
-        console.error("Error saving data:", error);
+        alert("Error saving data: " + error.message);
       }
+    } else {
+      router.replace("/(tabs)/");
     }
-
-    router.replace("/(tabs)/");
   };
 
   return (

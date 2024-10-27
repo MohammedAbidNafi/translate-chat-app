@@ -6,12 +6,12 @@ import { View, Text, SafeAreaView, TextInput, ScrollView } from "react-native";
 interface User {
   id: string;
   name: string;
-  imageUrl: string | null; 
+  imageUrl: string | null;
 }
 
 export default function AddUsersScreen() {
   const [name, setName] = useState<string>("");
-  const [data, setData] = useState<User[]>([]); 
+  const [data, setData] = useState<User[]>([]);
   useEffect(() => {
     getdata();
   }, []);
@@ -25,16 +25,14 @@ export default function AddUsersScreen() {
       } = await supabase.auth.getUser();
       if (userError) {
         console.error("Error fetching user:", userError.message);
-        return; 
+        return;
       }
 
       // Fetch all users
-      const { data: users, error } = await supabase
-        .from<User>("users")
-        .select("*");
+      const { data: users, error } = await supabase.from("users").select("*");
       if (error) {
         console.error("Error fetching users:", error.message);
-        return; 
+        return;
       }
 
       console.log(users);
@@ -55,10 +53,10 @@ export default function AddUsersScreen() {
         value={name}
       />
 
-      <ScrollView className="w-full">
-        {data.map((item) => (
+      <ScrollView className="w-full ">
+        {data?.map((item, index) => (
           <UserComp
-            key={item.id}
+            key={index}
             id={item.id}
             name={item.name}
             imageUrl={item.imageUrl}
