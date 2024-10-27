@@ -95,7 +95,7 @@ export default function SaveProfileComp() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredLanguages, setFilteredLanguages] = useState(languages);
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
-  const [imageUri, setImageUri] = useState<string | null>(null); // Image URI state
+  const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const onChangeSearch = (query: string) => {
@@ -137,7 +137,7 @@ export default function SaveProfileComp() {
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const uri = result.assets[0].uri;
       setImageUri(uri);
-      uploadImageToSupabase(uri); // Trigger upload with URI
+      uploadImageToSupabase(uri);
     }
   };
 
@@ -161,12 +161,9 @@ export default function SaveProfileComp() {
         return;
       }
 
-      // Retrieve the public URL if upload is successful
       const {
         data: { publicUrl },
-      } = supabase.storage
-        .from("profile") // Correct bucket name
-        .getPublicUrl(fileName);
+      } = supabase.storage.from("profile").getPublicUrl(fileName);
 
       setImageUrl(publicUrl);
       console.log("File uploaded successfully:", publicUrl);

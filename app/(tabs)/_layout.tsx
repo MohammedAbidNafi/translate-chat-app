@@ -1,6 +1,5 @@
-import { Tabs } from 'expo-router';
-import { useColorScheme } from 'react-native';
-
+import { Tabs } from "expo-router";
+import { useColorScheme } from "react-native";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -13,7 +12,7 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="chats"
+          name="chat-screen"
           options={{
             title: "Chats",
             tabBarLabel: "Chats",
@@ -25,17 +24,15 @@ export default function TabLayout() {
             title: "Groups",
             tabBarLabel: "Groups",
           }}
-        
         />
         <Tabs.Screen
-          name='add-users'
+          name="add-users"
           options={{
-            title:"Add Users",
-            tabBarLabel:"Add Users"
+            title: "Add Users",
+            tabBarLabel: "Add Users",
           }}
-          />
+        />
       </Tabs>
-
     </>
   );
 }
