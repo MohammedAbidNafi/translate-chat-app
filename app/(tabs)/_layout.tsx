@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme } from 'react-native';
 
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
@@ -24,8 +25,17 @@ export default function TabLayout() {
             title: "Groups",
             tabBarLabel: "Groups",
           }}
+        
         />
+        <Tabs.Screen
+          name='add-users'
+          options={{
+            title:"Add Users",
+            tabBarLabel:"Add Users"
+          }}
+          />
       </Tabs>
+
     </>
   );
 }

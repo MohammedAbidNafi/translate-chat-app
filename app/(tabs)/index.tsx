@@ -25,7 +25,7 @@ export default function HomeScreen() {
       </View>
       <Pressable
         className="mt-[12px] w-full rounded-[16px] bg-primary-b-300 py-[16px] dark:bg-primary-a-500"
-        onPress={() => router.replace("/saveProfile")}
+        onPress={() => router.replace("./saveProfile")}
       >
         <View className="flex-row items-center justify-center">
           <Text className="ml-[4px] text-center text-[16px] text-primary-a-500 dark:text-primary-b-50">
