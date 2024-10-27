@@ -13,7 +13,6 @@ export default function HomeScreen() {
   const router = useRouter();
   return (
     <SafeAreaView>
-      <Text className="text-blue-500 text-xl font-bold">Home Screen</Text>
       <View className="flex-row mt-4">
         <Pressable
           onPress={() => {

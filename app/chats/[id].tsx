@@ -181,8 +181,6 @@ export default function HomeScreen() {
       </View>
     );
   }
-// console.log("User ID:", user?.id);
-// console.log("Fetched Name:", data?.name);
 
   return (
     <View className="flex-1 bg-gray-900  p-4">

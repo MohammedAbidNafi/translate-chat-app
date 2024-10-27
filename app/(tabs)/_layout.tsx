@@ -1,69 +1,55 @@
 import { Tabs } from "expo-router";
 import { useColorScheme } from "react-native";
+import { TabBarIcon } from "@/components/navigation/TabBarIcon"; // Ensure this path is correct
+import { Colors } from "@/constants/Colors"; // Ensure this path is correct
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <>
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: "#3B82F6", // Blue color
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "home" : "home-outline"}
+              color={color}
+            />
+          ),
         }}
-      >
-        <Tabs.Screen
-          name="add-users"
-          options={{
-            title: "Chats",
-            tabBarLabel: "Chats",
-          }}
-        />
-        <Tabs.Screen
-          name="groups"
-          options={{
-            title: "Groups",
-            tabBarLabel: "Groups",
-          }}
-        />
-      </Tabs>
-    </>
+      />
+      <Tabs.Screen
+        name="add-users"
+        options={{
+          title: "Chats",
+          tabBarLabel: "Chats",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "chatbubbles" : "chatbubbles-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="groups"
+        options={{
+          title: "Groups",
+          tabBarLabel: "Groups",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "people" : "people-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+    </Tabs>
   );
 }
-
-// import { Tabs } from 'expo-router';
-// import React from 'react';
-
-// import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-// import { Colors } from '@/constants/Colors';
-// import { useColorScheme } from '@/hooks/useColorScheme';
-
-// export default function TabLayout() {
-//   const colorScheme = useColorScheme();
-
-//   return (
-//     <Tabs
-//       screenOptions={{
-//         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-//         headerShown: false,
-//       }}>
-//       <Tabs.Screen
-//         name="index"
-//         options={{
-//           title: 'Home',
-//           tabBarIcon: ({ color, focused }) => (
-//             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-//           ),
-//         }}
-//       />
-//       <Tabs.Screen
-//         name="explore"
-//         options={{
-//           title: 'Explore',
-//           tabBarIcon: ({ color, focused }) => (
-//             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-//           ),
-//         }}
-//       />
-//     </Tabs>
-//   );
-// }

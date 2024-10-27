@@ -30,7 +30,7 @@ export default function AddUsersScreen() {
 
       // Fetch all users
       const { data: users, error } = await supabase
-        .from<User>("users")
+        .from("users")
         .select("*");
       if (error) {
         console.error("Error fetching users:", error.message);
