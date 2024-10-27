@@ -167,7 +167,7 @@ export default function GroupChat() {
             className="p-3 bg-blue-600 rounded-lg"
             onPress={sendMessage}
           >
-            <Text className="text-white">Send</Text>
+            <Text className="text-primary-a-50">Send</Text>
           </Pressable>
         </View>
       </KeyboardAwareScrollView>

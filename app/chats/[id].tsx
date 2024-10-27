@@ -15,12 +15,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function HomeScreen() {
   const { id } = useLocalSearchParams();
   const [message, setMessage] = useState("");
-  const [Acc,setAcc] = useState("");
+  const [Acc, setAcc] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [sourceLanguage, setSourceLanguage] = useState<string | null>(null);
-  const [destinationLanguage, setDestinationLanguage] = useState<string | null>(null);
+  const [destinationLanguage, setDestinationLanguage] = useState<string | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,9 +30,13 @@ export default function HomeScreen() {
 
     const channel = supabase
       .channel("public:messages")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "chats" }, (payload: { new: any }) => {
-        setMessages((prevMessages) => [...prevMessages, payload.new]);
-      })
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "chats" },
+        (payload: { new: any }) => {
+          setMessages((prevMessages) => [...prevMessages, payload.new]);
+        }
+      )
       .subscribe();
 
     return () => {
@@ -47,7 +53,7 @@ export default function HomeScreen() {
     setLoading(false);
   };
 
-  const fetchUserById = async (userId:any) => {
+  const fetchUserById = async (userId: any) => {
     const { data, error } = await supabase
       .from("users")
       .select("name")
@@ -63,37 +69,36 @@ export default function HomeScreen() {
     }
   };
   const fetchUser = async () => {
-  // Fetch the current authenticated user
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+    // Fetch the current authenticated user
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
 
-  if (error) {
-    console.error("Error fetching user:", error.message);
-    return; // Exit if there's an error
-  }
+    if (error) {
+      console.error("Error fetching user:", error.message);
+      return; // Exit if there's an error
+    }
 
-  // Set the user ID
-  setUserId(user?.id || null);
+    // Set the user ID
+    setUserId(user?.id || null);
 
-  // Fetch the user's name from the "users" table
-  const { data, error: fetchError } = await supabase
-    .from("users")
-    .select("name")
-    .eq("id", user?.id)
-    .single();
+    // Fetch the user's name from the "users" table
+    const { data, error: fetchError } = await supabase
+      .from("users")
+      .select("name")
+      .eq("id", user?.id)
+      .single();
 
-  if (fetchError) {
-    console.error("Error fetching user's name:", fetchError.message);
-  } else {
-    const fetchedName = data?.name || "User"; // Default to "User" if name is not found
-    setUserName(fetchedName);
+    if (fetchError) {
+      console.error("Error fetching user's name:", fetchError.message);
+    } else {
+      const fetchedName = data?.name || "User"; // Default to "User" if name is not found
+      setUserName(fetchedName);
 
-    console.log("User name fetched successfully:", fetchedName); // Log the fetched name
-  }
-};
-
+      console.log("User name fetched successfully:", fetchedName); // Log the fetched name
+    }
+  };
 
   // Fetch messages from Supabase
   const fetchMessages = async () => {
@@ -121,7 +126,7 @@ export default function HomeScreen() {
   const fetchLanguages = async () => {
     const senderId = await AsyncStorage.getItem("id");
     console.log("senderId", senderId);
-    
+
     try {
       const { data, error } = await supabase
         .from("users")
@@ -181,8 +186,8 @@ export default function HomeScreen() {
       </View>
     );
   }
-// console.log("User ID:", user?.id);
-// console.log("Fetched Name:", data?.name);
+  // console.log("User ID:", user?.id);
+  // console.log("Fetched Name:", data?.name);
 
   return (
     <View className="flex-1 bg-gray-900  p-4">
@@ -194,7 +199,7 @@ export default function HomeScreen() {
               {Acc ? (
                 <Text className="text-lg text-white">{Acc}</Text>
               ) : (
-                <ActivityIndicator size="small" color="#1E90FF" /> 
+                <ActivityIndicator size="small" color="#1E90FF" />
               )}
             </View>
           ),
@@ -235,11 +240,10 @@ export default function HomeScreen() {
             className="p-3 bg-blue-600 rounded-lg"
             onPress={sendMessage}
           >
-            <Text className="text-white">Send</Text>
+            <Text className="text-primary-a-50">Send</Text>
           </Pressable>
         </View>
       </KeyboardAwareScrollView>
     </View>
   );
 }
- 
