@@ -11,6 +11,7 @@ import { router } from "expo-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "@/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SaveProfileComp() {
   const languages = [
@@ -183,6 +184,10 @@ export default function SaveProfileComp() {
       return;
     }
 
+    if (user?.id) {
+      await AsyncStorage.setItem("id", user.id);
+      console.log("User ID saved to AsyncStorage:", user.id);
+    }
     const { data, error } = await supabase.from("users").insert({
       id: user?.id,
       name: name,

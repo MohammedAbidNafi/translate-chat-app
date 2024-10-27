@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { supabase } from "@/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
   const { id } = useLocalSearchParams();
@@ -59,7 +60,8 @@ export default function HomeScreen() {
     if (error) {
       console.error("Error fetching user:", error.message);
     } else {
-      setUserId(user?.id || null); // Store the authenticated user's ID
+      setUserId(user?.id || null);
+      console.log("User fetched successfully:", user?.id);
     }
   };
 
@@ -85,19 +87,21 @@ export default function HomeScreen() {
   };
 
   const fetchLanguages = async () => {
+    const senderId = await AsyncStorage.getItem("id");
+    console.log("senderId", senderId);
     try {
       // Fetch languages from Supabase
       const { data, error } = await supabase
         .from("users")
         .select("id, language")
-        .in("id", [userId, id]);
+        .in("id", [senderId, id]);
 
       if (error) {
         console.error("Error fetching user languages:", error.message);
       } else {
         // Set the source and destination languages based on the sender and receiver IDs
         data.forEach((user) => {
-          if (user.id === userId) setSourceLanguage(user.language);
+          if (user.id === senderId) setSourceLanguage(user.language);
           if (user.id === id) setDestinationLanguage(user.language);
         });
         console.log("Languages fetched successfully:", data);
