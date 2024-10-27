@@ -18,6 +18,7 @@ export default function UserComp({
   name: string;
   imageUrl: any;
 }) {
+  
   return (
     <Pressable
       className="flex-row items-center py-3 border-b border-gray-700"

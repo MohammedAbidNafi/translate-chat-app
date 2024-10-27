@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, Stack } from "expo-router";
 import {
   View,
   Text,
@@ -17,36 +17,28 @@ export default function HomeScreen() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
   const [sourceLanguage, setSourceLanguage] = useState<string | null>(null);
-  const [destinationLanguage, setDestinationLanguage] = useState<string | null>(
-    null
-  );
+  const [destinationLanguage, setDestinationLanguage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch the authenticated user ID
-
     loadData();
 
     const channel = supabase
       .channel("public:messages")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "chats" },
-        (payload: { new: any }) => {
-          setMessages((prevMessages) => [...prevMessages, payload.new]);
-        }
-      )
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "chats" }, (payload: { new: any }) => {
+        setMessages((prevMessages) => [...prevMessages, payload.new]);
+      })
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [userName]);
 
   const loadData = async () => {
     setLoading(true);
-
     await fetchUser();
     await fetchMessages();
     await fetchLanguages();
@@ -62,7 +54,18 @@ export default function HomeScreen() {
       console.error("Error fetching user:", error.message);
     } else {
       setUserId(user?.id || null);
-      console.log("User fetched successfully:", user?.id);
+
+      const { data, error: fetchError } = await supabase
+        .from("users")
+        .select("name")
+        .eq("id", user?.id)
+        .single();
+
+      if (fetchError) {
+        console.error("Error fetching user's name:", fetchError.message);
+      } else {
+        setUserName(data?.name || "User");
+      }
     }
   };
 
@@ -78,10 +81,9 @@ export default function HomeScreen() {
       .order("created_at", { ascending: true });
 
     if (!error) {
-      // Set messages and mark isUser based on the authenticated user's ID
       const updatedMessages = data.map((msg) => ({
         ...msg,
-        isUser: msg.sender_id === senderId, // Determine if the message is from the user
+        isUser: msg.sender_id === senderId,
       }));
       setMessages(updatedMessages);
       console.log("Messages fetched successfully:", updatedMessages);
@@ -94,7 +96,6 @@ export default function HomeScreen() {
     const senderId = await AsyncStorage.getItem("id");
     console.log("senderId", senderId);
     try {
-      // Fetch languages from Supabase
       const { data, error } = await supabase
         .from("users")
         .select("id, language")
@@ -103,7 +104,6 @@ export default function HomeScreen() {
       if (error) {
         console.error("Error fetching user languages:", error.message);
       } else {
-        // Set the source and destination languages based on the sender and receiver IDs
         data.forEach((user) => {
           if (user.id === senderId) setSourceLanguage(user.language);
           if (user.id === id) setDestinationLanguage(user.language);
@@ -118,17 +118,15 @@ export default function HomeScreen() {
   const sendMessage = async () => {
     if (!message.trim()) return;
 
-    // Define the message payload according to server requirements
     const messagePayload = {
       message: message,
-      source: sourceLanguage, // or dynamically set this based on your app’s context
+      source: sourceLanguage,
       destination: destinationLanguage,
-      sender_id: userId, // Use the authenticated user ID
-      receiver_id: id, // Replace with appropriate receiver ID
+      sender_id: userId,
+      receiver_id: id,
     };
 
     try {
-      // Send message to the server
       const response = await fetch("http://192.168.1.5:8080/chat", {
         method: "POST",
         headers: {
@@ -138,10 +136,7 @@ export default function HomeScreen() {
       });
 
       if (response.ok) {
-        // Reset message input on successful send
         setMessage("");
-
-        // Fetch the updated messages from Supabase
         fetchMessages();
       } else {
         console.error("Error sending message:", response.statusText);
@@ -152,7 +147,6 @@ export default function HomeScreen() {
   };
 
   if (loading) {
-    // Display ActivityIndicator while loading is true
     return (
       <View className="flex-1 items-center justify-center bg-gray-900">
         <ActivityIndicator size="large" color="#1E90FF" />
@@ -162,7 +156,17 @@ export default function HomeScreen() {
   }
 
   return (
-    <View className="flex-1 bg-gray-900 p-4 ">
+    <View className="flex-1 bg-gray-900 p-4">
+      {/* Set up the Stack.Screen header with userName */}
+      <Stack.Screen
+        options={{
+          headerTitle: () => (
+            <View className="flex-row items-center">
+              <Text className="text-lg text-white">{userName}</Text>
+            </View>
+          ),
+        }}
+      />
       <ScrollView className="flex-1 mb-4">
         {messages.map((msg, index) => (
           <View
@@ -186,7 +190,6 @@ export default function HomeScreen() {
         ))}
       </ScrollView>
       <KeyboardAwareScrollView>
-        {/* Message Input */}
         <View className="flex-row items-center border-t border-gray-700 pt-2">
           <TextInput
             className="flex-1 bg-gray-800 text-primary-a-900 dark:text-primary-b-50 p-3 rounded-lg mr-2"
@@ -206,3 +209,4 @@ export default function HomeScreen() {
     </View>
   );
 }
+ 

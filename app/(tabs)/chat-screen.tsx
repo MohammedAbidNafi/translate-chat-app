@@ -4,40 +4,12 @@ import { router } from "expo-router";
 
 const contacts = [
   {
-    id: 1,
-    name: "+91 99667 82707 ",
-    message: "hi",
-    time: "19:50",
-    image: "https://via.placeholder.com/50",
-  },
-  {
-    id: 2,
-    name: "Abu Saudi",
-    message: "Voice Message",
-    time: "12:43",
-    image: "https://via.placeholder.com/50",
-  },
-  {
-    id: 3,
-    name: "Mummy",
-    message: "assalamalikum",
-    time: "Yesterday",
-    image: "https://via.placeholder.com/50",
-  },
-  {
-    id: 4,
-    name: "E-CELL EXECOM 2024-2025",
-    message: "This message was deleted",
-    time: "22:04",
-    image: "https://via.placeholder.com/50",
-  },
-  {
     id: 5,
     name: "Abid AI & DS (B)",
     message: "okay",
     time: "21:56",
     image: "https://via.placeholder.com/50",
-  },
+  }
 ];
 
 export default function ChatsScreen() {
